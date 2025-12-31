@@ -1,0 +1,192 @@
+disabled_rules:
+
+  - closure_parameter_position
+  # Closure parameters should be on the same line as opening brace.
+
+  - cyclomatic_complexity
+  # Complexity of function bodies should be limited.
+  # Default configuration: warning: 10, error: 20, ignores_case_statements: false
+
+  - file_length
+  # Files should not span too many lines.
+
+  - function_body_length
+  # Functions bodies should not span too many lines.
+
+  - function_parameter_count
+  # Number of function parameters should be low.
+
+  - identifier_name
+  # Identifier names should only contain alphanumeric characters and start with a lowercase character or should only contain capital letters.
+  # In an exception to the above, variable names may start with a capital letter when they are declared static and immutable.
+  # Variable names should not be too long or too short.
+
+  - nesting
+  # Types should be nested at most 1 level deep, and statements should be nested at most 5 levels deep.
+
+  - todo
+  # TODOs and FIXMEs should be resolved.
+
+  - type_body_length
+  # Type bodies should not span too many lines.
+
+  - opening_brace
+  # Disabled because it's handled by swiftformat
+  # Opening braces should be preceded by a single space and on the same line as the declaration.
+
+  - trailing_comma
+  # Disabled because it's handled by swiftformat
+  # Trailing commas in arrays and dictionaries should be avoided/enforced.
+
+opt_in_rules:
+
+  - closure_spacing
+  # Closure expressions should have a single space inside each brace.
+
+  - collection_alignment
+  # All elements in a collection literal should be vertically aligned
+
+  - contains_over_filter_count
+  # Prefer `contains` over comparing `filter(where:).count` to 0.
+
+  - contains_over_filter_is_empty
+  # Prefer `contains` over using `filter(where:).isEmpty`.
+
+  - contains_over_first_not_nil
+  # Prefer `contains` over `first(where:) != nil` and `firstIndex(where:) != nil`.
+
+  - contains_over_range_nil_comparison
+  # Prefer `contains` over `range(of:) != nil` and `range(of:) == nil`.
+
+  - convenience_type
+  # Types used for hosting only static members should be implemented as a caseless enum to avoid instantiation.
+
+  - empty_collection_literal
+  # Prefer checking isEmpty over comparing collection to an empty array or dictionary literal.
+
+  - explicit_init
+  # Explicitly calling .init() should be avoided.
+
+  - literal_expression_end_indentation
+  # Array and dictionary literal end should have the same indentation as the line that started it.
+
+  - modifier_order
+  # Modifier order should be consistent: [override, acl, setterACL, dynamic, mutators, lazy, final, required, convenience, typeMethods, owned]
+
+  - multiline_arguments
+  # Arguments should be either on the same line, or one per line.
+
+  - multiline_parameters
+  # Functions and methods parameters should be either on the same line, or one per line.
+
+  - multiline_parameters_brackets
+  # Multiline parameters should have their surrounding brackets in a new line.
+
+  - overridden_super_call
+  # Some overridden methods should always call super.
+
+  - prefer_self_type_over_type_of_self
+  # Prefer Self over type(of: self) when accessing properties or calling methods.
+
+  - prohibited_super_call
+  # Some methods should not call super
+
+  - redundant_type_annotation
+  # Variables should not have redundant type annotation.
+
+  - sorted_first_last
+  # Prefer using min() or max() over sorted().first or sorted().last
+
+  - toggle_bool
+  # Prefer someBool.toggle() over someBool = !someBool.
+
+  - trailing_closure
+  # Trailing closure syntax should be used whenever possible.
+
+  - unneeded_parentheses_in_closure_argument
+  # Parentheses are not needed when declaring closure arguments.
+
+  - vertical_parameter_alignment_on_call
+  # Function parameters should be aligned vertically if they’re in multiple lines in a method call.
+
+  - vertical_whitespace_closing_braces
+  # Don’t include vertical whitespace (empty line) before closing braces.
+
+custom_rules:
+
+  double_space:
+    name: "Double Space"
+    message: "There should be no more than one consecutive whitespace character."
+    regex: "[^\\s][ \\t]{2}"
+    match_kinds: [argument, identifier, keyword, number, objectliteral, typeidentifier]
+
+  space_after_equals:
+    name: "Space After Equals"
+    message: "There should be whitespace characters on both sides of operator containing equality sign."
+    regex: "=[^\\s=]"
+    match_kinds: [argument, identifier, keyword, number, objectliteral, typeidentifier]
+
+  space_after_opening_parenthesis:
+    name: "Space After Opening Parenthesis"
+    message: "There should be no space after opening parenthesis."
+    regex: "[\\(\\[][ \\t]"
+    match_kinds: [argument, identifier, keyword, number, objectliteral, typeidentifier]
+
+  space_before_closing_parenthesis:
+    name: "Space Before Closing Parenthesis"
+    message: "There should be no space before closing parenthesis."
+    regex: "[^\\s][ \\t]+([\\)\\]])"
+    capture_group: 1
+    match_kinds: [argument, identifier, keyword, number, objectliteral, typeidentifier]
+
+  space_before_closing_brace:
+    name: "Space Before Closing Brace"
+    message: "There should be space before closing brace."
+    regex: "[^\\s\\{]([\\}])"
+    capture_group: 1
+    match_kinds: [argument, identifier, keyword, number, objectliteral, typeidentifier]
+
+  date_init_testability:
+    name: "Date.init() Testability"
+    message: "Using Date.init() hurts testability, use Date.now() instead."
+    excluded: ".*Test.*\\.swift"
+    regex: "\\bDate((\\s*\\.\\s*init)?|(\\s*=\\s*\\.init))\\s*\\(\\s*\\)"
+
+  escaped_quot:
+    name: "Superfluous escaping of single quotation mark"
+    message: "Single quotation mark characters do not require escaping in string literals."
+    regex: "\\\\'"
+    match_kinds: [string]
+
+excluded:
+  - Pods
+  - vendor # This is where gems live on GitHubActions
+  - DerivedData
+  - "*/Generated"
+  - "*/*/Generated"
+
+type_name:
+  max_length: 50
+  excluded: ["ID"]
+
+line_length:
+  warning: 200
+  error: 10000
+  ignores_interpolated_strings: true
+
+multiline_arguments:
+  only_enforce_after_first_closure_on_first_line: true
+  first_argument_location: "next_line"
+
+trailing_closure:
+  only_single_muted_parameter: true
+
+###
+# In order to enable a rule, please do the following:
+# 1. Put the rule in the right place, alphabetically.
+# 2. Copy the rule’s description from https://realm.github.io/SwiftLint/<rule_name>.html and place it below the rule
+# 3. Fix any warnings.
+# 4. Create a PR for just that rule and the code you fixed. Don’t fix multiple rules in one PR.
+#
+
+

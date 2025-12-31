@@ -1,0 +1,4 @@
+project: NQueens.xcodeproj
+retain_public: true
+schemes:
+- NQueens

@@ -1,0 +1,80 @@
+# Acronyms to auto-capitalize
+--acronyms ID,URL,UUID
+# K&P braces (braces on same line)
+--allman false
+# Closing parens should be balanced
+--closingparen balanced
+# Remove explicit void return type
+--closurevoid remove
+# Enable trailing commas
+--commas always
+# else is on same line as the bracket
+--elseposition same-line
+# No whitespace inside empty braces, e.g. {}
+--emptybraces no-space
+# guard/else rule is flexible
+--guardelse auto
+# Ignore file headers
+--header ignore
+# #ifs indent at top-level
+--ifdef outdent
+# Alphabetically order imports, but put @testable ones last
+--importgrouping testable-last
+# 4 space indentation
+--indent 4
+# Do not indent case statements
+--indentcase false
+# Do not indent multiline strings
+--indentstrings false
+# Add a line after MARKs
+--lineaftermarks true
+# Use lf as the linebreak char
+--linebreaks lf
+# Use consistent ordering for member modifiers.
+--modifierorder
+# Hoist let to outermost scope
+--patternlet hoist
+# Avoid redundant types
+--redundanttype inferred
+# Only require self in init methods
+--self init-only
+# SwiftFormat cannot detect @autoclosure parameters, and you cannot remove self
+# from those calls. One such function in our codebase is Single.from(future:).
+# This parameter makes it so that self is required in calls to that function.
+--selfrequired from
+# Only use semicolons when combining multiple statements inline
+--semicolons inline
+# Always use short optional syntax (Type?) instead of Optional<Type>
+--shortoptionals always
+# Align code independently of tab width
+--smarttabs enabled
+# Use _ for argument names only in closures
+--stripunusedargs closure-only
+# Always trim whitespace
+--trimwhitespace always
+# Use Void over ()
+--voidtype void
+# Multiline arguments should be wrapped with a newline before the first argument
+--wraparguments before-first
+# Multiline collections should be wrapped with a newline before the first element
+--wrapcollections before-first
+# Multiline conditions should be wrapped in whatever way the are currently wrapped
+--wrapconditions preserve
+# Multiline parameters should be wrapped with a newline before the first parameter
+--wrapparameters before-first
+# Multiline return types should be wrapped in whatever way they're currently wrapped
+--wrapreturntype preserve
+# Ternary ifs should be wrapped with a newline before the operators
+--wrapternary before-operators
+# Multiline typealiases should be wrapped in whatever way they're currently wrapped
+--wraptypealiases preserve
+# Do not match Xcode indenting
+--xcodeindentation disabled
+# Prefer constant values to be on the right-hand-side of expressions.
+--yodaswap always
+
+# disabled rules
+--disable wrap,organizeDeclarations,wrapAttributes,extensionAccessControl,wrapMultilineStatementBraces,spaceAroundOperators,redundantBackticks
+
+# file options
+--exclude DerivedData
