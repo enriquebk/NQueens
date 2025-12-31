@@ -7,13 +7,12 @@ An iOS application that challenges players to solve the classic N-Queens puzzle.
 ### Prerequisites
 
 - Xcode 26.0 or later
-- iOS 17.0 or later
 
 ### Setup
 
 1. Clone the repository:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/enriquebk/NQueens.git
    cd NQueens
    ```
 
@@ -28,9 +27,63 @@ An iOS application that challenges players to solve the classic N-Queens puzzle.
 2. Choose your target device or simulator
 3. Select Product → Build to build or Product → Run to run the game
 
-### Testing
+## UI Demo
 
-The App has a test coverage of 100%. The Project has three types of tests:
+Here is a short video recording showcasing the app navigation and functionalities:
+
+https://github.com/user-attachments/assets/84aaed41-c84e-4c93-b99a-a7e152645436
+
+## Architecture Decisions
+
+### MVVM-C (Model-View-ViewModel-Coordinator)
+
+The application follows the **MVVM-C** architecture pattern, which provides clear separation of concerns and testability. This pattern extends the traditional MVVM architecture by introducing a Coordinator layer to handle navigation logic, keeping views and view models decoupled from navigation concerns.
+
+#### How It Works
+
+The architecture follows a unidirectional data flow pattern:
+
+1. **User Interaction** → View captures user actions and dispatches Events to the ViewModel
+2. **Event Processing** → ViewModel processes Events through a pure reducer function
+3. **State Update** → The reducer returns a new State and optional Effects
+4. **UI Update** → View automatically updates when observing State changes via `@Published` properties
+5. **Side Effects** → Effects (like API calls, navigation, sounds) are processed separately in the ViewModel
+
+#### Components
+
+**ViewModels:**
+- All business logic resides in view models, making them easily testable
+- State is `@Published` and observed by SwiftUI views, enabling reactive UI updates
+- When a UI Event is treated by the ViewModel, it uses a pure, deterministic `reduce` function that maps Events + State → (NewState, Effects). The ViewModel's state is updated with the NewState and the side Effects are processed separately from the pure state updates
+- The reducer pattern ensures that state transformations are predictable and testable, as the same Event + State will always produce the same NewState + Effects
+- Effects allow handling side operations (API calls, navigation triggers, sound effects) without mixing them with state logic
+  
+**Views:**
+- Implement the screens UI
+- Are purely declarative SwiftUI views that focus solely on presentation
+- Observe ViewModel's state for updates.
+- Dispatch user interactions as Events to the ViewModel, maintaining a unidirectional data flow
+- Have no knowledge of navigation or business logic, making them highly reusable and testable
+
+**Models:**
+- Pure data structures that represent domain entities,
+- No business logic in models - they are simple value types
+
+**Coordinator (`AppCoordinatorView`):**
+- Handles navigation flow between screens, abstracting navigation logic from views and view models
+- Injects dependencies into view models
+
+#### Benefits of This Architecture
+
+1. **Separation of Concerns:** Business logic (ViewModel), UI (View), and Navigation (Coordinator) are clearly separated, making each component easier to understand and maintain and test.
+2. **Scalability:** Easy to add new screens and functionalities by following the established pattern.
+3. **Dependency Injection:** Services are injected through initializers, enabling easy mocking for tests and flexible service implementations
+4. **Predictable State Management:** Reducer pattern ensures state changes are predictable and traceable - given the same Event and State, the result is always deterministic
+5. **Testability:** Every component can be tested in isolation thanks to the separation of concerns of the architecture and the dependency injection pattern. 
+
+### Testing
+   
+The App has a test coverage of 100%. The testing strategy includes three types of tests: **Unit Tests** for testing ViewModels and game logic, **Snapshot Tests** that verify the correct rendering of the views, and **XCUITest** that test the overall functionality of each screen.
 
 **Unit Tests:**
 - `GameViewModelTests.swift` - Tests game view logic and state management
@@ -40,60 +93,15 @@ The App has a test coverage of 100%. The Project has three types of tests:
 
 **Snapshot Tests:**
 - `GameViewSnapshotTests.swift` - Snapshot tests for game view
-- `StartViewSnapshotTests.swift` - Snapshot  tests for start view
+- `StartViewSnapshotTests.swift` - Snapshot tests for start view
 - `BestTimesViewSnapshotTests.swift` - Snapshot tests for best times view
-- `WinViewSnapshotTests.swift` - Snapshot  tests for win view
+- `WinViewSnapshotTests.swift` - Snapshot tests for win view
 
 **UI Tests (XCUITest):**
 - `GameViewUITests.swift` - End-to-end tests for game interactions
 - `StartViewUITests.swift` - End-to-end tests for start screen
 - `BestTimesViewUITests.swift` - End-to-end tests for best times screen
 - `WinViewUITests.swift` - End-to-end tests for win screen
-
-**Run all tests in Xcode:**
-1. Press `Cmd + U` or select Product → Test
-2. Or run a specific test by clicking the diamond icon next to the test
-
-
-## Architecture Decisions
-
-### MVVM-C (Model-View-ViewModel-Coordinator)
-
-The application follows the **MVVM-C** architecture pattern, which provides clear separation of concerns and testability:
-
-#### Components
-
-**Coordinator (`AppCoordinatorView`):**
-- Handles navigation flow between screens
-- Manages navigation stack using SwiftUI's `NavigationStack`
-- Defines all app routes as an enum (`Route`)
-- Injects dependencies (e.g., `BestTimesStore`) into view models
-
-**ViewModels:**
-- Implement the `ViewModel` protocol which enforces a reducer pattern
-- Use a pure, deterministic `reduce` function that maps Events + State → (NewState, Effects)
-- Separate side effects (effects) from state updates
-- State is `@Published` and observed by SwiftUI views
-- All business logic resides in view models, making them easily testable
-
-**Views:**
-- Implement `ViewProtocol` for consistent view model integration
-- Are purely declarative SwiftUI views
-- Handle events by calling `viewModel.handle(_:)`
-- Observe state through `@ObservedObject` or `@StateObject`
-
-**Models:**
-- Pure data structures (`GameState`, `BoardPosition`, `ValidationResult`)
-- No business logic in models
-- Game validation logic is in `NQueensValidator` (a stateless utility)
-
-#### Benefits of This Architecture
-
-1. **Testability:** ViewModels are pure functions (reducers) that can be tested without UI dependencies
-2. **Separation of Concerns:** Business logic (ViewModel), UI (View), and Navigation (Coordinator) are clearly separated
-3. **Scalability:** Easy to add new screens by following the established pattern
-4. **Dependency Injection:** Services are injected through initializers, enabling easy mocking for tests
-5. **Predictable State Management:** Reducer pattern ensures state changes are predictable and traceable
 
 ### Design System
 
@@ -105,10 +113,11 @@ The app includes a reusable design system (`DesignSystem` module) with:
 
 ### Services
 
+These are external services to the MVVM-C architecture and Design System and are always consumed by the ViewModels.
+
 **Persistence:**
 - `BestTimesStore` protocol for abstraction
-- `UserDefaultsBestTimesStore` as concrete implementation
-- Easy to swap implementations (e.g., Core Data, CloudKit)
+- `UserDefaultsBestTimesStore` is a concrete implementation of `BestTimesStore` using the standard `UserDefaults`
 
 **Sound Effects:**
 - `SoundFxManager` protocol for abstraction
@@ -119,18 +128,10 @@ The app includes a reusable design system (`DesignSystem` module) with:
 
 The project integrates several quality assurance tools to maintain code quality and consistency:
 
-### SwiftLint
-
-Static analysis tool that enforces Swift style and conventions.
-
-### SwiftFormat
-
-Automatic code formatting tool to ensure consistent code style across the codebase.
-
-### Periphery
-
-Detects unused code to help maintain a clean codebase.
-
+- **SwiftLint** - Static analysis tool that enforces Swift style and conventions
+- **SwiftFormat** - Automatic code formatting tool to ensure consistent code style across the codebase
+- **Periphery** - Detects unused code to help maintain a clean codebase
+- **Fastlane** - Helps with easy CI/CD integration
 
 These tools help ensure:
 - Consistent code style
@@ -167,3 +168,5 @@ NQueensTests/
 NQueensUITests/
 └── UI Test suites
 ```
+
+
