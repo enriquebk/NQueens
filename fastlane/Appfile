@@ -1,0 +1,5 @@
+# Appfile for Fastlane
+# More information: https://docs.fastlane.tools/advanced/#appfile
+
+app_identifier("com.NQueens")
+

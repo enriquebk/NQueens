@@ -1,0 +1,47 @@
+# Fastfile for NQueens
+# More information: https://docs.fastlane.tools
+
+default_platform(:ios)
+
+platform :ios do
+  desc "Build the app"
+  lane :build do
+    build_app(
+      project: "NQueens.xcodeproj",
+      scheme: "NQueens",
+      configuration: "Release",
+      clean: true,
+      destination: "platform=iOS Simulator,name=iPhone 16",
+      skip_codesigning: true,
+      skip_package_ipa: true,
+      disable_xcpretty: false
+    )
+  end
+
+  desc "Build and run tests"
+  lane :buildAndTest do
+    # Build the app first
+    build_app(
+      project: "NQueens.xcodeproj",
+      scheme: "NQueens",
+      configuration: "Debug",
+      clean: true,
+      destination: "platform=iOS Simulator,name=iPhone 16",
+      skip_codesigning: true,
+      skip_package_ipa: true,
+      disable_xcpretty: false
+    )
+    
+    # Run unit tests
+    run_tests(
+      project: "NQueens.xcodeproj",
+      scheme: "NQueens",
+      destination: "platform=iOS Simulator,name=iPhone 16",
+      clean: false,
+      code_coverage: false,
+      disable_xcpretty: false
+    )
+  end
+
+end
+

@@ -1,0 +1,26 @@
+name: NQueens PR
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  LANG: "en_US.UTF-8"
+  LC_ALL: "en_US.UTF-8"
+  # Skip update check when launching fastlane
+  FASTLANE_SKIP_UPDATE_CHECK: 1
+  # Hide changelog information at the end of running fastlane
+  FASTLANE_HIDE_CHANGELOG: 1
+  # Do not check GitHub for similar issues
+  FASTLANE_HIDE_GITHUB_ISSUES: 1
+
+jobs:
+  checks:
+    name: Run Checks
+    uses: ./.github/workflows/checks.yml
+    with:
+      ref: ${{ github.ref }}

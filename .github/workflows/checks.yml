@@ -1,0 +1,39 @@
+name: Build NQueens
+
+on:
+  workflow_call:
+    inputs:
+      ref:
+        required: true
+        type: string
+
+env:
+  LANG: "en_US.UTF-8"
+  LC_ALL: "en_US.UTF-8"
+  # Skip update check when launching fastlane
+  FASTLANE_SKIP_UPDATE_CHECK: 1
+  # Hide changelog information at the end of running fastlane
+  FASTLANE_HIDE_CHANGELOG: 1
+  # Do not check GitHub for similar issues
+  FASTLANE_HIDE_GITHUB_ISSUES: 1
+
+jobs:
+  build-app:
+    name: Build
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
+          lfs: true
+          fetch-depth: 100 
+
+      - name: Build App
+        shell: bash
+        run: fastlane build
+
+      - name: Run Periphery
+        shell: bash
+        run: xcodebuild -scheme periphery -project ./NQueens.xcodeproj
+
+    
