@@ -1,0 +1,46 @@
+{
+  "configurations" : [
+    {
+      "id" : "A63C7123-3FD3-46F5-ABF7-F26026BAB7EC",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : {
+      "targets" : [
+        {
+          "containerPath" : "container:NQueens.xcodeproj",
+          "identifier" : "CDE8F2072EF61F7E00134692",
+          "name" : "NQueens"
+        }
+      ]
+    },
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:NQueens.xcodeproj",
+      "identifier" : "CDE8F2072EF61F7E00134692",
+      "name" : "NQueens"
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:NQueens.xcodeproj",
+        "identifier" : "CDE8F2152EF61F7F00134692",
+        "name" : "NQueensTests"
+      }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:NQueens.xcodeproj",
+        "identifier" : "CDE8F21F2EF61F7F00134692",
+        "name" : "NQueensUITests"
+      }
+    }
+  ],
+  "version" : 1
+}
