@@ -28,6 +28,7 @@ final class BestTimesViewModel: ViewModel {
 
     enum BestTimesEvent {
         case onAppear
+        case updateItems([BestTime])
     }
 
     // MARK: - Effects
@@ -39,12 +40,14 @@ final class BestTimesViewModel: ViewModel {
     // MARK: - Event Handler
 
     static func reduce(_ event: BestTimesEvent, currentState: BestTimesState) -> (BestTimesState, [BestTimesEffect]) {
-        let newState = currentState
+        var newState = currentState
         var effects: [BestTimesEffect] = []
 
         switch event {
         case .onAppear:
             effects.append(.loadItems)
+        case let .updateItems(items):
+            newState.items = items
         }
 
         return (newState, effects)
@@ -55,7 +58,8 @@ final class BestTimesViewModel: ViewModel {
     func process(_ effect: BestTimesEffect) {
         switch effect {
         case .loadItems:
-            state.items = store.load().sorted { $0.seconds < $1.seconds }
+            let newItems = store.load().sorted { $0.seconds < $1.seconds }
+            handle(.updateItems(newItems))
         }
     }
 }
